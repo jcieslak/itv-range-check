@@ -1,3 +1,3 @@
-# angular-seed — the seed for AngularJS apps
+# ITC Service checker
 
 This project is an angularjs application to check service availability for ITC providers. 
