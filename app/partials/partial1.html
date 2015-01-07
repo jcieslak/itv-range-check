@@ -1,0 +1,67 @@
+  <div class="container">
+    <div class="row">
+    	<div class="col-md-12" enter>
+        <h2 enter leave>Sprawdź dostępność usługi</h2>
+        <hr/>
+      <form class="form-horizontal well" role="form">
+        <div class="form-group">
+          <label for="inputCity" class="col-xs-2 control-label">Miejscowość</label>
+          <div class="col-xs-9">
+          	<select class="form-control" id="selectCity" placeholder="City" ng-model="selectedFilter.city" ng-change="cleanSelection()">
+          		<option ng-repeat="city in cities">{{city}}</option>
+          	</select>
+          </div>
+          <div class="col-xs-1 tick-sign" ng-show="cityTickVisible">✓</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="inputStreet" class="col-xs-2 control-label">Ulica</label>
+          <div class="col-xs-9">
+            <autocomplete ng-model="selectedFilter.street" data="streetsDictionary[selectedFilter.city]" on-type="checkStreet" on-select="streetSelected" attr-placeholder="nazwa ulicy" ng-change="checkAvailability(selectedFilter)"></autocomplete>
+            <!-- <input type="text" class="form-control" id="inputStreet" placeholder="Street" ng-model="selectedFilter.street"> -->
+          </div>
+          <div class="col-xs-1 tick-sign" ng-show="streetTickVisible">✓</div>
+        </div>
+
+		<div class="form-group">
+          <label for="inputStreetNumber" class="col-xs-2 control-label">Numer</label>
+          <div class="col-xs-9">
+            <input input-value="selectedFilter.number" input-name="selectedFilter.number" type="text" class="form-control" id="inputStreetNumber" placeholder="numer ulicy" ng-model="selectedFilter.number" ng-change="checkAvailability(selectedFilter)" number-only-input/> 
+          </div>
+          <div class="col-xs-1 tick-sign" ng-show="numberTickVisible">✓</div>
+        </div>        
+
+        <div class="form-group">
+          <div class="col-xs-offset-2 col-xs-10">
+            <button type="submit" class="btn btn-danger" ng-hide="available" ng-click="checkAvailability(selectedFilter)">Service is not available </button>
+            <button type="submit" class="btn btn-success" ng-show="available" ng-click="checkAvailability(selectedFilter)">Service is available </button>
+          </div>
+
+        </div>
+      </form>
+  	</div>
+  </div>
+<br/><br/><br/>
+
+    <div class="row">
+    	<div class="col-md-12">
+        <h3>Debug info </h3>
+			<div class="well">
+				{{selectedFilter}}
+			</div>
+    	</div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <hr/>
+        <a href="#/admin/">Administration panel</a>
+    </div>
+    </div>
+
+
+
+  </div>
+
+
+  
