@@ -5,6 +5,7 @@
 angular.module('myApp.controllers', [])
   .controller('MyCtrl1', ['$scope', 'availabilityFactory', function($scope, availabilityFactory) {
 	
+	var debug = true;
 	$scope.onlyNumbers = /^\d+$/;
   	$scope.selectedFilter = {};
   	$scope.available = false;
@@ -19,6 +20,8 @@ angular.module('myApp.controllers', [])
 	//construct list of cities
 	$scope.cities = [];	
 	$scope.streetsDictionary = [];
+
+
 
 
 	// populate cities and streets lists
@@ -37,13 +40,11 @@ angular.module('myApp.controllers', [])
 		}
 	}
 
-	
 	// set default value in select box
 	$scope.selectedFilter.city = $scope.cities[0];
 	
 
 	// function used while user is typing.
-
     // if other city was selected clean fields: street, number
 	$scope.cleanSelection = function() {
 		$scope.selectedFilter.street = '';
@@ -92,23 +93,28 @@ angular.module('myApp.controllers', [])
 					if( cityItem.street[j].name === $scope.selectedFilter.street ) {
 						
 						var numbersArray = cityItem.street[j].number;
-						console.log('aktualne numery = ' + numbersArray);
-						console.log('szukany number = ' + $scope.selectedFilter.number);
-
-					
-						var isIn = numbersArray.indexOf($scope.selectedFilter.number);
-						if (isIn >= 0) {
-							$scope.available = true;	
-							break;
-						}
-						else {
-							$scope.available = false;
-						}
-						// console.log(isIn);
-
-						// // check the number
-						// console.log(cityItem.street[j]);
 						
+						// check if number contains wildcard - "*"
+						if (numbersArray.indexOf("*") != -1) {
+							$scope.available = true;
+						}
+						// if number does not contain wildcard - do regular search
+						else {
+							if (debug) {
+								console.log('aktualne numery = ' + numbersArray);
+								console.log('szukany number = ' + $scope.selectedFilter.number);								
+							}
+						
+							var isIn = numbersArray.indexOf($scope.selectedFilter.number);
+							if (isIn >= 0) {
+								$scope.available = true;	
+								break;
+							}
+							else {
+								$scope.available = false;
+							}
+						}
+
 
 					}
 				}

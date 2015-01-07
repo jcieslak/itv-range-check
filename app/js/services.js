@@ -17,12 +17,18 @@ angular.module('myApp.services', [])
          "name":"Bednary",
          "street":[
             {
+               
                "number":[
                   "1",
                   "2",
                   "3"
                ]
+            },
+            {
+               "name": "Bitwy nad Bzurą",
+               "number" : ["*"]
             }
+
          ]
       }
    },
