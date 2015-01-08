@@ -8,27 +8,27 @@ angular.module('myApp.directives', []).
     return function(scope, elm, attrs) {
       elm.text(version);
     };
-  }]).
-  directive('enter', function() {
-  	// sample dyrektywa!!!!
-  	return {
-  		restrict: 'A',
-  		link: function(scope, element) {
-  				element.bind('mouseenter', function() {
-  					console.log('Im inside1!!!!');
-  				})
-  			}
+  }])
+  // .directive('enter', function() {
+  // 	// sample dyrektywa!!!!
+  // 	return {
+  // 		restrict: 'A',
+  // 		link: function(scope, element) {
+  // 				element.bind('mouseenter', function() {
+  // 					console.log('Im inside1!!!!');
+  // 				})
+  // 			}
   		
-  	}
-  }).
-  directive('leave', function() {
-  	return function(scope, element) {
-  		element.bind("mouseleave", function() {
-  			console.log('im leaving on a jet plane!');
-  	});
-  }
-  }).
-  directive('numberOnlyInput', function () {
+  // 	}
+  // })
+  // .directive('leave', function() {
+  // 	return function(scope, element) {
+  // 		element.bind("mouseleave", function() {
+  // 			console.log('im leaving on a jet plane!');
+  // 	});
+  // }
+  // })
+  .directive('numberOnlyInput', function () {
     return {
         restrict: 'EA',
         template: '<input name="{{inputName}}" ng-model="inputValue" />',

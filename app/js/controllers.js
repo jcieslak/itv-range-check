@@ -3,10 +3,13 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', 'availabilityFactory', function($scope, availabilityFactory) {
+  .controller('MyCtrl1', ['$scope', 'availabilityFactory', 'servicesFactory', function($scope, availabilityFactory, servicesFactory) {
 	
 	var debug = true;
-	$scope.onlyNumbers = /^\d+$/;
+
+	// @TODO: house numbers can also contain letters.
+	// $scope.onlyNumbers = /^\d+$/;
+	$scope.onlyNumbers = /^[a-zA-Z\d]+$/;
   	$scope.selectedFilter = {};
   	$scope.available = false;
   	$scope.cityTickVisible = true;
@@ -75,37 +78,63 @@ angular.module('myApp.controllers', [])
 		}
 	}
 
-	// check availability function
+	// check availability function is called when user fills 3 inputs in the form.
 	$scope.checkAvailability = function(selectedFilter) {
 		
 
-		//check the city
+		// go through the cities and select matched city
 		for (var i=0; i<$scope.availabilityData.length; i++) {
+
+			// if selected city equals city in the database
 			if ($scope.availabilityData[i].city.name === $scope.selectedFilter.city) {
+			
+				// we have city that matches!
 				var cityItem = $scope.availabilityData[i].city;
-				console.log('we have found a city that match');
+				console.log('our CITY match in the DB = ' + cityItem.name);
 				
-				//check the street
+				// go through the streets associated with given city and select matched
 				for (var j=0;j<cityItem.street.length;j++) {
-					if ($scope.selectedFilter.street === "") {
-						delete $scope.selectedFilter.street;
-					}
-					if( cityItem.street[j].name === $scope.selectedFilter.street ) {
+
+					if (cityItem.street[j].name == "*") {
+						$scope.services = $scope.translateServices(cityItem.street[j].services);
+						$scope.available = true;
+						break;
+					} 
+
+					// if selected street equals street in the database
+					else if( cityItem.street[j].name === $scope.selectedFilter.street ) {
+
+						// we have street that matches!
+						var streetItem = cityItem.street[j];
+						console.log('our STREET match in the DB = ' + streetItem.name);
 						
-						var numbersArray = cityItem.street[j].number;
+
+						// go through numbrs associated with given city and street
+						var streetNumbersArray = streetItem.number;
 						
+
+
+						// exception is that if numbers array contains * wildcard we just return available = true
+						// this means that all numbers on given street are available 
 						// check if number contains wildcard - "*"
-						if (numbersArray.indexOf("*") != -1) {
+
+						if (streetNumbersArray.indexOf("*") != -1) {
+
 							$scope.available = true;
+							$scope.services = streetItem.services;
+							console.log($scope.services);
+
 						}
+
 						// if number does not contain wildcard - do regular search
 						else {
 							if (debug) {
-								console.log('aktualne numery = ' + numbersArray);
+								console.log('aktualne numery = ' + streetNumbersArray);
 								console.log('szukany number = ' + $scope.selectedFilter.number);								
 							}
-						
-							var isIn = numbersArray.indexOf($scope.selectedFilter.number);
+							
+							// number has been found in the numbers array --> return true and get available services;						
+							var isIn = streetNumbersArray.indexOf($scope.selectedFilter.number);
 							if (isIn >= 0) {
 								$scope.available = true;	
 								break;
@@ -117,12 +146,30 @@ angular.module('myApp.controllers', [])
 
 
 					}
+
+					// if ($scope.selectedFilter.street === "") {
+					// 	delete $scope.selectedFilter.street;
+					// }
+
 				}
 			break;	
 			}
 			$scope.available = false;
 		}
 		
+	}
+
+	// function returns string service names instead of ids
+	// it uses servicesFactory to do the translation
+	$scope.translateServices = function(servicesArray) {
+		var servicesDb = servicesFactory.get();
+
+		var outputArray = [];
+		for (i=0 ;i < servicesArray.length; i++) {
+			outputArray.push(servicesDb[servicesArray[i]]);
+		}
+		console.log(outputArray);
+		return outputArray.join(", ");
 	}
 
   }])
